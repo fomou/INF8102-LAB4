@@ -2,7 +2,8 @@
 import boto3
 from botocore.exceptions import ClientError
 import time
-
+import json
+import os
 ec2 = boto3.client('ec2')
 region = 'us-east-1'
 ec2_resource = boto3.resource('ec2', region_name=region)
@@ -86,6 +87,30 @@ ec2.authorize_security_group_ingress(
         {'IpProtocol': 'udp', 'FromPort': 53, 'ToPort': 53, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
     ]
 )
+
+# Save or update JSON file in parent directory
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+out_path = os.path.join(parent_dir, "vpc_info.json")
+
+data = {}
+if os.path.exists(out_path):
+    try:
+        with open(out_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, IOError):
+        data = {}
+
+data.update({
+    "vpc_id": vpc_id,
+    "sg_id": sg_id,
+    "public_subnets": pub_subnets,
+    "private_subnets": priv_subnets
+})
+
+with open(out_path, "w", encoding="utf-8") as f:
+    json.dump(data, f, indent=2)
+
+print(f"Saved VPC info to {out_path}")
 
 print(f"VPC created successfully!")
 print(f"VPC ID: {vpc_id}")

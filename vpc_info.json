@@ -1,0 +1,13 @@
+{
+    "vpc_id": "vpc-0b2671768583d541b",
+    "sg_id": "sg-0812c369d77d8d440",
+    "public_subnets": [
+        "subnet-05e7f12106f63b0e1",
+        "subnet-0d19a13301c2921ae"        
+    ],
+
+    "private_subnets": [
+      "subnet-0857a10430d016f0a",
+      "subnet-056585bd54743ed3f"
+    ]
+}
